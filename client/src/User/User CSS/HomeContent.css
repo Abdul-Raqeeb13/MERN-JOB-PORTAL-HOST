@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    font-family: "Poppins", system-ui !important;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.servicesHeading {
+    padding-bottom: 30px;
+    color: white;
+}
+
+.availabilityStyle {
+    background-color: #FFD700; /* Gold */
+    padding: 5px;
+    padding-right: 50px;
+    color: black; /* Text color changed to black */
+    border-radius: 10px;
+    clip-path: polygon(100% 0, 80% 53%, 100% 100%, 0% 100%, 0 51%, 0% 0%);
+}
+
+.services-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+}
+
+.services {
+    text-align: center;
+    padding: 60px 0;
+    background-color: #222; /* Dark background for contrast */
+}
+
+.service-card {
+    background-color: #333; /* Darker card background */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    text-align: center;
+    transition: all 0.5s 100ms;
+}
+
+.service-card:hover {
+    background-color: #444; /* Slightly lighter on hover */
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 15px;
+    transform: scale(1.03);
+}
+
+.service-card img {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.service-card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #FFD700; /* Gold */
+}
+
+.service-card p {
+    font-size: 1em;
+    color: #f0f0f0; /* Light gray */
+}
+
+.testimonials {
+    background-color: #222; /* Dark background for contrast */
+    padding: 60px 0;
+    text-align: center;
+}
+
+.testimonials-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.testimonial {
+    background-color: #444; /* Darker background for testimonials */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    font-style: italic;
+}
+
+.testimonial h4 {
+    margin-top: 15px;
+    font-weight: bold;
+    color: #FFD700; /* Gold */
+}
+
+.ChooseUsContainer{
+  background-color:  #222;
+
+}
+.ChooseUsContainerRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: 50px;
+    width: 100%;
+    background-color:  #222;
+}
+
+.ChooseUsImage {
+    width: 80%;
+    aspect-ratio: 1.1;
+    border-radius: 20px;
+}
+
+.ChooseUsText {
+    text-align: justify;
+    color: rgb(205, 205, 146);
+}
+
+.cta {
+    text-align: center;
+    padding: 60px;
+    background-color: #FFD700; /* Gold */
+    color: black; /* Text color changed to black */
+}
+
+.cta h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+.cta-button {
+    background-color: #222; /* Dark background for button */
+    color: #FFD700; /* Gold */
+    padding: 15px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #333; /* Slightly lighter on hover */
+}
+
+.faq {
+  background-color: #222; /* Dark background for the FAQ section */
+  color: #FFD700; /* Gold color for text */
+  padding: 40px 20px; /* Add padding for spacing */
+  border-radius: 8px; /* Rounded corners for the section */
+  width: 100%; /* Maximum width for better alignment */
+  margin: 20px auto; /* Center the section on the page */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; /* Shadow for depth */
+  text-align: center;
+}
+
+.faq h2 {
+  text-align: center; /* Center the main heading */
+  margin-bottom: 30px; /* Spacing below the heading */
+  font-size: 2rem; /* Larger font size for the heading */
+}
+
+.faq-item {
+  margin-bottom: 20px; /* Spacing between FAQ items */
+  padding: 20px; /* Padding inside each FAQ item */
+  background-color: #333; /* Darker background for each FAQ item */
+  border-radius: 8px; /* Rounded corners for the items */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.faq-item:hover {
+  background-color: #444; /* Change background on hover */
+}
+
+.faq-item h3 {
+  margin: 0; /* Remove default margin */
+  font-size: 1.5rem; /* Font size for the question */
+  color: #FFD700; /* Gold color for the question text */
+}
+
+.faq-item p {
+  margin: 10px 0 0; /* Margin for spacing above and below the paragraph */
+  font-size: 1rem; /* Standard font size for the answer */
+  color: #ccc; /* Lighter gray for answer text */
+}
+
+.faq-item span {
+  color: #FFD700; /* Gold color for the span */
+  cursor: pointer; /* Pointer cursor for clickable span */
+  text-decoration: underline; /* Underline for emphasis */
+}
+
+.faq-item span:hover {
+  color: #FFC107; /* Slightly darker gold on hover */
+}
+
+
+.partners {
+    background-color: #222; /* Dark background for contrast */
+    padding: 60px 0;
+    text-align: center;
+}
+
+.partners-logos {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.partners-logos img {
+    width: 100px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.partners-logos img:hover {
+    opacity: 1;
+}
+
+.newsletter {
+    background-color: #444; /* Darker background */
+    padding: 60px;
+    text-align: center;
+}
+
+.newsletter-input {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.newsletter-button {
+    padding: 10px 20px;
+    background-color: #FFD700; /* Gold */
+    color: black; /* Text color changed to black */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-button:hover {
+    background-color: #FFC107; /* Slightly darker gold */
+}

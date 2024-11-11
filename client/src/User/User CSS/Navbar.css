@@ -1,0 +1,81 @@
+.navbar-brand {
+    color: #FFD700 !important; /* Gold */
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.custom-navbar {
+    background-color: #000000ec; /* Solid black background */
+    padding: 1rem 2rem;
+}
+
+.nav-link {
+    color: #FFD700 !important; /* Gold */
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #FFC107 !important; /* Slightly darker gold on hover */
+}
+
+.navbar-toggler {
+    background-color: #FFD700 !important; /* Gold for toggler */
+}
+
+.dropdown-menu {
+    background-color: #000; /* Black background for dropdown */
+}
+
+.dropdown-item {
+    color: #FFD700; /* Gold */
+}
+
+.dropdown-item:hover {
+    background-color: #444; /* Darker background on hover */
+}
+
+.active {
+    color: #FFC107 !important; /* Highlight color */
+}
+
+
+
+
+
+
+
+
+
+/* modal styling */
+/* Navbar.css */
+.custom-modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    padding: 10px;
+}
+
+.custom-modal-input {
+    width: 100%;
+}
+
+.custom-modal-btn {
+    width: 100%;
+    padding: 10px 0;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.custom-modal-link {
+    margin-top: 15px;
+    text-align: center;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.custom-modal-link:hover {
+    text-decoration: underline;
+}

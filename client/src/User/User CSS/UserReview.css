@@ -1,0 +1,81 @@
+/* Ensure the whole page has a black background */
+html, body {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    height: 100%; /* Ensure full height */
+    background-color: #000; /* Black background */
+    color: #FFD700; /* Gold color for text */
+}
+
+.user-review-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0; /* Remove margin */
+    overflow: hidden; /* Ensure cards stay within bounds */
+    padding: 40px 0; /* Adjust padding for spacing above and below */
+    text-align: center;
+    background-color: #222; /* Dark background for the review section */
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%; /* Reduce width for better alignment */
+}
+
+.review-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Increase gap for better spacing */
+    transition: transform 0.8s ease-in-out; /* Smooth sliding transition */
+    width: 100%; /* Set to 100% to occupy full width */
+}
+
+.review-card {
+    flex-shrink: 0; /* Prevent cards from shrinking */
+    width: 30%; /* Ensures cards have consistent width */
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+    transition: transform 0.5s ease; /* Smooth hover transition */
+    background-color: #333; /* Darker card background */
+    text-align: center; /* Center-align text */
+}
+
+.review-card img {
+    object-fit: cover; /* Ensure images fit well */
+}
+
+.review-card:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+    transition: all 1.5s ease; /* Smooth hover transition */
+}
+
+/* Arrow styles */
+.arrow-icon {
+    font-size: 2.5rem !important;
+    cursor: pointer;
+    color: #FFD700; /* Gold color for arrows */
+    transition: color 0.3s ease;
+    margin: 0 20px; /* Add consistent margin for spacing */
+}
+
+.arrow-icon:hover {
+    color: #FFC107; /* Slightly darker gold on hover */
+}
+
+.reviewHeading {
+    text-align: center;
+    margin: 20px 0; /* Adjusted for spacing */
+    color: #ffffff; /* Gold color for heading */
+}
+
+.reviewStyle {
+    background-color: #FFD700; /* Gold background for the review style */
+    padding: 5px;
+    padding-left: 55px;
+    color: black; /* Text color changed to black */
+    border-radius: 10px;
+    clip-path: polygon(100% 0, 100% 53%, 100% 100%, 0% 100%, 25% 51%, 0% 0%);
+}
