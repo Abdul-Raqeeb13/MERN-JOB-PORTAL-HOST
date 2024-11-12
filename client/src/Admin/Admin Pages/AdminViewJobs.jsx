@@ -133,8 +133,8 @@ const AdminViewJobs = () => {
   return (
     <>
       <Heading>Admin View Jobs</Heading>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
       <Container>
+      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
         {jobs.length > 0 ? (
           jobs.slice(0).reverse().map(job => (
             <JobCard key={job._id}>
@@ -149,7 +149,7 @@ const AdminViewJobs = () => {
             </JobCard>
           ))
         ) : (
-          <p style={{ color: '#fff' }}>No jobs available</p>
+          <p style={{ color: '#fff' }}></p>
         )}
       </Container>
     </>

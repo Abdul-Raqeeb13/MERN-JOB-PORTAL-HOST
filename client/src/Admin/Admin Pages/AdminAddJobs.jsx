@@ -4,26 +4,22 @@ import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
-
-// Form container centered and responsive
 const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f4f4f4; /* Background color for the whole view */
+  background-color: #f4f4f4;
 `;
 
-// The form styling itself
 const JobForm = styled.form`
   background-image: linear-gradient(-225deg, #22E1FF 0%, #1D8FE1 48%, #625EB1 100%);
   padding: 40px;
-  max-width: 600px; /* Optional: max width for form */
+  max-width: 600px;
   border-radius: 12px;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
   color: #fff;
 `;
 
-// Error message styling
 const ErrorMessage = styled.p`
   color: red;
   font-size: 1rem;
@@ -32,7 +28,6 @@ const ErrorMessage = styled.p`
   text-align: center;
 `;
 
-// Form heading styling
 const FormTitle = styled.h2`
   margin-bottom: 20px;
   text-align: center;
@@ -40,7 +35,6 @@ const FormTitle = styled.h2`
   color: #fff;
 `;
 
-// Input field styling
 const InputField = styled.input`
   width: 100%;
   padding: 12px;
@@ -51,7 +45,6 @@ const InputField = styled.input`
   color: #333;
 `;
 
-// Select field styling for job title
 const SelectField = styled.select`
   width: 100%;
   padding: 12px;
@@ -62,7 +55,6 @@ const SelectField = styled.select`
   color: #333;
 `;
 
-// Textarea styling for job description
 const TextArea = styled.textarea`
   width: 100%;
   padding: 12px;
@@ -74,7 +66,6 @@ const TextArea = styled.textarea`
   resize: vertical;
 `;
 
-// Submit button styling
 const SubmitButton = styled.button`
   width: 100%;
   padding: 12px;
@@ -92,9 +83,7 @@ const SubmitButton = styled.button`
 `;
 
 const AdminAddJobForm = () => {
-
-  const nav = useNavigate()
-
+  const nav = useNavigate();
   const token = localStorage.getItem('Token');
 
   const [jobDetails, setJobDetails] = useState({
@@ -104,9 +93,11 @@ const AdminAddJobForm = () => {
     location: '',
     experience: '',
     salary: '',
+    education: '',
+    skills: ''
   });
 
-  const [error, setError] = useState('');  // State to handle errors
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     setJobDetails({
@@ -117,46 +108,48 @@ const AdminAddJobForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axios({
         method: "POST",
         url: 'http://localhost:8000/admin/adminaddjobs',
         headers: {
-          'Authorization': `${token}`,  // Include Bearer with the token
+          'Authorization': `${token}`,
           'Content-Type': "application/json"
         },
-        data: jobDetails  // Send the object directly, no need to stringify
+        data: jobDetails
       });
 
-      console.log(response.data);  // Log the response if successful
-      if (response.data) {
-        toast.success("Job Posted Success", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "dark",
-        });
+      console.log(response);
+      
 
-        setJobDetails({
-          title: '',
-          description: '',
-          company: '',
-          location: '',
-          experience: '',
-          salary: '',
-        })
+      toast.success("Job Posted Successfully", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
 
-        setTimeout(() => {
-          nav('/admin/viewjobs')
-        }, 2000);
-      }
-      setError('');  // Clear any previous errors on successful response
-    } catch (e) {
-      setError(e.response?.data?.message || 'An error occurred. Please try again.');
+      setJobDetails({
+        title: '',
+        description: '',
+        company: '',
+        location: '',
+        experience: '',
+        salary: '',
+        education: '',
+        skills: ''
+      });
+
+      setTimeout(() => {
+        nav('/admin/viewjobs');
+      }, 2000);
+
+      setError('');
+    } catch (err) {
+      setError(err.response?.data?.message || 'An error occurred. Please try again.');
     }
   };
 
@@ -167,16 +160,9 @@ const AdminAddJobForm = () => {
         <JobForm onSubmit={handleSubmit}>
           <FormTitle>Post New Job</FormTitle>
 
-          {/* Display error message if any
-          {error && <ErrorMessage>{error}</ErrorMessage>} */}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
-          {/* Job Title Dropdown */}
-          <SelectField
-            name="title"
-            value={jobDetails.title}
-            onChange={handleChange}
-            required
-          >
+          <SelectField name="title" value={jobDetails.title} onChange={handleChange} required>
             <option value="" disabled>Select Job Title</option>
             <option value="Frontend Developer">Frontend Developer</option>
             <option value="Backend Developer">Backend Developer</option>
@@ -185,66 +171,18 @@ const AdminAddJobForm = () => {
             <option value="DevOps Engineer">DevOps Engineer</option>
           </SelectField>
 
-          {/* Job Description */}
-          <TextArea
-            name="description"
-            placeholder="Job Description"
-            rows="2"
-            value={jobDetails.description}
-            onChange={handleChange}
-            required
-          />
+          <TextArea name="description" placeholder="Job Description" rows="2" value={jobDetails.description} onChange={handleChange} required />
+          <InputField type="text" name="company" placeholder="Company Name" value={jobDetails.company} onChange={handleChange} required />
+          <InputField type="text" name="location" placeholder="Location" value={jobDetails.location} onChange={handleChange} required />
+          <InputField type="text" name="experience" placeholder="Experience Required (e.g., 2-4 years)" value={jobDetails.experience} onChange={handleChange} required />
+          <InputField type="number" name="salary" placeholder="Salary (e.g., 50000)" value={jobDetails.salary} onChange={handleChange} required />
+          <InputField type="text" name="education" placeholder="Education Required" value={jobDetails.education} onChange={handleChange} required />
+          <InputField type="text" name="skills" placeholder="Skills Required" value={jobDetails.skills} onChange={handleChange} required />
 
-          {/* Company Name */}
-          <InputField
-            type="text"
-            name="company"
-            placeholder="Company Name"
-            value={jobDetails.company}
-            onChange={handleChange}
-            required
-          />
-
-          {/* Location */}
-          <InputField
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={jobDetails.location}
-            onChange={handleChange}
-            required
-          />
-
-          {/* Experience Required */}
-          <InputField
-            type="text"
-            name="experience"
-            placeholder="Experience Required (e.g., 2-4 years)"
-            value={jobDetails.experience}
-            onChange={handleChange}
-            required
-          />
-
-          {/* Salary */}
-          <InputField
-            type="number"
-            name="salary"
-            placeholder="Salary (e.g., 50000)"
-            value={jobDetails.salary}
-            onChange={handleChange}
-            required
-          />
-
-              {/* Display error message if any */}
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-
-
-          {/* Submit Button */}
           <SubmitButton type="submit">Post Job</SubmitButton>
         </JobForm>
       </FormContainer>
     </>
-
   );
 };
 

@@ -7,14 +7,21 @@ const {findUserById} = require('../models/authModel')
 
 exports.adminAddJobs = (async (req, res) => { 
     try {
+        console.log(req.body);
+        
         const { error, value } = adminAddJobFormValidator.validate(req.body);
         
         if (error) {
+            console.log(error);
+            
             return res.status(400).send({
                 message: error.details[0].message
             });
         } else {
+            console.log("else" , req.body);
+            
             const jobResponse = await postJob(req.body);  // Avoid naming conflict by using 'jobResponse'
+            console.log(jobResponse);
             
             if (jobResponse) {
                 return res.status(201).send({  // 201: Created
@@ -27,6 +34,8 @@ exports.adminAddJobs = (async (req, res) => {
             }
         }
     } catch (error) {
+        console.log(error);
+        
         return res.status(500).send({ message: error.message });  // Catch block with status 500 for server errors
     }
 });

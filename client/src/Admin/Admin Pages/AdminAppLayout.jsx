@@ -6,7 +6,6 @@ import styled from 'styled-components';
 
 const ContentArea = styled.div`
   margin-left: 250px;
-  padding: 20px;
   background-color: #f4f4f4;
   min-height: 100vh;
 
