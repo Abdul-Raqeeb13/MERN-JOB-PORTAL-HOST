@@ -35,10 +35,10 @@ export default function UserAppliedJobs() {
     fetchUserAppliedJobs();
 
     // Set up polling interval to fetch updated job data every 10 seconds
-    const intervalId = setInterval(fetchUserAppliedJobs, 10000); // Adjust interval as needed
+    // const intervalId = setInterval(fetchUserAppliedJobs, 10000); // Adjust interval as needed
 
-    // Clear interval when component unmounts
-    return () => clearInterval(intervalId);
+    // // Clear interval when component unmounts
+    // return () => clearInterval(intervalId);
   }, []);
 
   return (

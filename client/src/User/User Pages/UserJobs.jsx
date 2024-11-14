@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { ToastContainer, toast } from "react-toastify";
+import { Link } from 'react-router-dom';
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -25,7 +26,7 @@ const JobCard = styled.div`
   border-radius: 15px;
   padding: 25px;
   width: 350px;
-  height: 300px; /* Fixed height for consistent card size */
+  height: 270px; /* Fixed height for consistent card size */
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
@@ -127,66 +128,66 @@ const UserJobs = () => {
     return () => clearInterval(intervalId); // Clean up the interval on component unmount
   }, []);
 
-  const handleApply = async (jobId) => {
-    const userId = localStorage.getItem("UserID");
-    const token = localStorage.getItem('Token');
+  // const handleApply = async (jobId) => {
+  //   const userId = localStorage.getItem("UserID");
+  //   const token = localStorage.getItem('Token');
 
-    const jobAndUserID = {
-      jobId,
-      userId
-    };
+  //   const jobAndUserID = {
+  //     jobId,
+  //     userId
+  //   };
 
-    try {
-      const response = await axios({
-        method: "POST",
-        url: 'http://localhost:8000/user/applyjob',
-        headers: {
-          'Authorization': `${token}`,
-          'Content-Type': "application/json"
-        },
-        data: JSON.stringify(jobAndUserID)
-      });
+  //   try {
+  //     const response = await axios({
+  //       method: "POST",
+  //       url: 'http://localhost:8000/user/applyjob',
+  //       headers: {
+  //         'Authorization': `${token}`,
+  //         'Content-Type': "application/json"
+  //       },
+  //       data: JSON.stringify(jobAndUserID)
+  //     });
 
-      if (response.status === 200 || response.status === 201) {
-        toast.success(response.data.message || "Job applied successfully!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "dark",
-        });
-        setJobs(prevJobs => prevJobs.filter(job => job._id !== jobId));
-      } else {
-        toast.warn("Unexpected response from server. Please try again.", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "dark",
-        });
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to apply for the job.";
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "dark",
-      });
-    }
-  };
+  //     if (response.status === 200 || response.status === 201) {
+  //       toast.success(response.data.message || "Job applied successfully!", {
+  //         position: "top-right",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         theme: "dark",
+  //       });
+  //       setJobs(prevJobs => prevJobs.filter(job => job._id !== jobId));
+  //     } else {
+  //       toast.warn("Unexpected response from server. Please try again.", {
+  //         position: "top-right",
+  //         autoClose: 2000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         theme: "dark",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     const errorMessage = error.response?.data?.message || "Failed to apply for the job.";
+  //     toast.error(errorMessage, {
+  //       position: "top-right",
+  //       autoClose: 3000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       theme: "dark",
+  //     });
+  //   }
+  // };
 
   return (
     <PageWrapper>
       <ToastContainer />
-      <h1 className='text-center my-4' style={{ color: 'white' }}>Available Jobs</h1>
+      <h1 className='text-center my-4' style={{ color: 'yellow' }}>Available Jobs</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <Container>
         {jobs.length > 0 ? (
@@ -199,7 +200,10 @@ const UserJobs = () => {
                 <strong>Experience : </strong> {job.experience} <br />
                 <strong>Salary : </strong> {job.salary} <br />
               </JobDetails>
-              <ApplyButton onClick={() => handleApply(job._id)}>Apply Now</ApplyButton>
+              <Link to={`/jobdetails/${job._id}`} className="w-100 btn btn-warning">Job Details</Link>
+
+              {/* <ApplyButton onClick={() => handleApply(job._id)}>Apply Now</ApplyButton> */}
+              {/* <ApplyButton onClick={() => handleApply(job._id)}>Apply Now</ApplyButton> */}
             </JobCard>
           ))
         ) : (

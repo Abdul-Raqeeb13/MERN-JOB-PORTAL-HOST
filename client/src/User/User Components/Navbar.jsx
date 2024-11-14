@@ -184,10 +184,13 @@ function MyNavbar() {
                             HOME
                         </NavLink>
                         <NavLink to="/userjobs" className={({ isActive }) => isActive ? 'nav-link active' : "nav-link"}>
-                            Jobs
+                           JOBS
                         </NavLink>
                         <NavLink to="/userappliedjobs" className={({ isActive }) => isActive ? 'nav-link active' : "nav-link"}>
-                            Applied Jobs
+                           APPLIED JOBS
+                        </NavLink>
+                        <NavLink to="/userprofile" className={({ isActive }) => isActive ? 'nav-link active' : "nav-link"}>
+                           PROFILE
                         </NavLink>
                     </Nav>
                     <Form inline className="ms-lg-5 ms-3 search-form">

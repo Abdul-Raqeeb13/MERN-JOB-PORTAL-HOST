@@ -9,7 +9,9 @@ import UserJobs from './User/User Pages/UserJobs';
 import { AuthProvider } from './User/User Pages/AuthContext';
 import ProtectedRoute from './User/User Pages/ProtectedRoute'
 import UserAppliedJobs from './User/User Pages/UserAppliedJobs';
-
+import JobDetail from './User/User Pages/JobDetail';
+import UserProfile from './User/User Pages/UserProfile';
+import UserProfileForm from './User/User Pages/ProfileForm';
 // admins components
 import AdminAppLayout from './Admin/Admin Pages/AdminAppLayout';
 import AdminDashboard from './Admin/Admin Pages/AdminDashboard';
@@ -33,7 +35,15 @@ const router  = createBrowserRouter([
       },
       {
         path : "/userappliedjobs",
-        element: <UserAppliedJobs />
+        element: < ProtectedRoute element={<UserAppliedJobs/>} />
+      },
+      {
+        path : "/jobdetails/:jobid",
+        element: <ProtectedRoute  element={<JobDetail/>} />
+      },
+      {
+        path : "/userprofile",
+        element: <ProtectedRoute  element={<UserProfileForm/>} />
       },
     ]
   }

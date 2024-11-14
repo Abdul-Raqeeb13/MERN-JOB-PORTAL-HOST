@@ -49,5 +49,7 @@ exports.getAllJobs = () => JobModel.find()
 
 exports.getJob = (_id) => JobModel.findOne({_id})
 
+exports.findSpecificJob = (jobId) => JobModel.findById(jobId);
+
 exports.deleteJobs = (id) => JobModel.findOneAndDelete(id)
 
