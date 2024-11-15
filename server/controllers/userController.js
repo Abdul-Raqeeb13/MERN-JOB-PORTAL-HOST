@@ -206,3 +206,15 @@ exports.JobDetails = async (req, res) => {
 };
 
 
+exports.userMakeProfile = async (req, res) => {
+    try {
+        const userId = req.query.userId;
+        console.log(userId);
+        
+        console.log(req.body);
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+}

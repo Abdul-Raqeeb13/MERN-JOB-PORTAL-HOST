@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const loginValidator = require("../validators/loginValidator");
 const JWT = require('jsonwebtoken');
 const { default: mongoose } = require("mongoose");
-require("../models/pdfModel")
+require("../models/profileModel")
 // const pdfSchema = mongoose.model("PdfDetails") 
 require("dotenv").config()
 

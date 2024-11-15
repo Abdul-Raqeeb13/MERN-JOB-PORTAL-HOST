@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
+import { ToastContainer, toast } from "react-toastify";
+import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const FormContainer = styled.div`
   width: 100%;
-  margin: 40px auto;
+  margin: 0.4px auto;
   padding: 50px;
   background: #222;
   color: yellow;
@@ -77,25 +82,59 @@ const UserProfileForm = () => {
     description: '',
     age: '',
     experience: '',
-    ctc: '',
+    dob: '',
     location: '',
     phone: '',
     email: '',
     skills: '',
     experiences: '',
     education: '',
-    accomplishments: '',
-    certifications: '',
+    // accomplishments: '',
+    // certifications: '',
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfileData({ ...profileData, [name]: value });
+  
+    // Calculate age if the dob field is updated
+    if (name === 'dob') {
+      const today = new Date();
+      const birthDate = new Date(value);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+  
+      setProfileData({ ...profileData, [name]: value, age: age.toString() });
+    } else {
+      setProfileData({ ...profileData, [name]: value });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(profileData);
+    // console.log(profileData);
+    const token = localStorage.getItem('Token');
+    const userId = localStorage.getItem('UserID');
+
+    console.log(token);
+    console.log(userId);
+    
+    try {
+
+      const response = await axios({
+        method: "POST",
+        url: `http://localhost:8000/user/usermakeprofile?userId=${userId}`,
+        headers: {
+          'Authorization': `${token}`,
+          'Content-Type': "application/json"
+        },
+        data : JSON.stringify(profileData)
+      });
+    } catch (error) {
+      
+    }
     // This is where you would save or pass profileData to a UserProfile component
   };
 
@@ -118,17 +157,18 @@ const UserProfileForm = () => {
           <TextArea name="description" placeholder="Brief Description" onChange={handleChange} required />
         </FormGroup>
         <FormGroup>
-          <Label>Age</Label>
-          <Input type="number" name="age" placeholder="Age" onChange={handleChange} required />
+          <Label>DOB</Label>
+          <Input type="date" name="dob" placeholder="Date Of Birth" onChange={handleChange} required />
         </FormGroup>
+        <FormGroup>
+  <Label>Age</Label>
+  <Input type="number" name="age" value={profileData.age} placeholder="Age" readOnly />
+</FormGroup>
         <FormGroup>
           <Label>Experience (years)</Label>
           <Input type="number" name="experience" placeholder="Years of Experience" onChange={handleChange} required />
         </FormGroup>
-        <FormGroup>
-          <Label>CTC</Label>
-          <Input type="text" name="ctc" placeholder="CTC" onChange={handleChange} required />
-        </FormGroup>
+       
         <FormGroup>
           <Label>Location</Label>
           <Input type="text" name="location" placeholder="Location" onChange={handleChange} required />
@@ -163,19 +203,19 @@ const UserProfileForm = () => {
           <TextArea name="education" placeholder="Educational background or Latest degree that you have" onChange={handleChange} required />
         </FormGroup>
 
-        {/* Accomplishments */}
+        {/* Accomplishments
         <SectionTitle>Accomplishments</SectionTitle>
         <FormGroup>
           <Label>Accomplishments</Label>
           <TextArea name="accomplishments" placeholder="Your accomplishments" onChange={handleChange} />
-        </FormGroup>
+        </FormGroup> */}
 
         {/* Certifications */}
-        <SectionTitle>Certifications</SectionTitle>
+        {/* <SectionTitle>Certifications</SectionTitle>
         <FormGroup>
           <Label>Certifications</Label>
           <Input type='file' name="certifications" placeholder="Your certifications" onChange={handleChange} />
-        </FormGroup>
+        </FormGroup> */}
 
         <Button type="submit">Submit Profile</Button>
       </form>
