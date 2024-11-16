@@ -5,6 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profileComplete, setProfileComplete] = useState(false);
 
   useEffect(() => {
     // Check local storage for user data
@@ -30,8 +31,13 @@ export const AuthProvider = ({ children }) => {
 
   }
 
+  const isprofileComplete = () => {
+    setProfileComplete(true)
+
+  }
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, adminLogin }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, adminLogin, profileComplete, isprofileComplete }}>
       {children}
     </AuthContext.Provider>
   );

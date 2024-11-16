@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // Define the schema for the user profile
 const userProfileSchema = new mongoose.Schema({
+  userId: { type: String, required: true, unique: true },  // Unique user ID
   name: { 
     type: String, 
     required: true, 
@@ -66,4 +67,6 @@ const userProfileSchema = new mongoose.Schema({
 // Create the model from the schema
 const UserProfile = mongoose.model('UserProfile', userProfileSchema);
 
-module.exports = UserProfile;
+exports.createProfile = (obj) => UserProfile.create(obj)
+
+exports.findUserProfile = (userId) => UserProfile.findOne({ userId });

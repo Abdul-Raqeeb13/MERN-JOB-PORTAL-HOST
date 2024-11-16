@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { ToastContainer, toast } from "react-toastify";
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const FormContainer = styled.div`
@@ -89,14 +87,49 @@ const UserProfileForm = () => {
     skills: '',
     experiences: '',
     education: '',
-    // accomplishments: '',
-    // certifications: '',
   });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const profileComplete = localStorage.getItem('profileComplete');
+    console.log(profileComplete);
+
+    if (profileComplete) {
+      navigate('/seeprofile');  // If profile is complete, navigate to profile page
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const token = localStorage.getItem('Token');
+        const userId = localStorage.getItem('UserID');
+
+        const response = await axios({
+          method: "GET",
+          url: `http://localhost:8000/user/getUserEmail?userId=${userId}`,
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': "application/json",
+          },
+        });
+
+        setProfileData((prevData) => ({
+          ...prevData,
+          email: response.data.email,
+        }));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
-    // Calculate age if the dob field is updated
+
     if (name === 'dob') {
       const today = new Date();
       const birthDate = new Date(value);
@@ -105,7 +138,6 @@ const UserProfileForm = () => {
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-  
       setProfileData({ ...profileData, [name]: value, age: age.toString() });
     } else {
       setProfileData({ ...profileData, [name]: value });
@@ -114,109 +146,161 @@ const UserProfileForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(profileData);
     const token = localStorage.getItem('Token');
     const userId = localStorage.getItem('UserID');
 
-    console.log(token);
-    console.log(userId);
-    
     try {
-
       const response = await axios({
         method: "POST",
         url: `http://localhost:8000/user/usermakeprofile?userId=${userId}`,
         headers: {
-          'Authorization': `${token}`,
-          'Content-Type': "application/json"
+          Authorization: `${token}`,
+          'Content-Type': "application/json",
         },
-        data : JSON.stringify(profileData)
+        data: JSON.stringify(profileData),
       });
+
+      toast.success("Profile successfully created!");
+      localStorage.setItem("profileComplete", true);
+      navigate('/seeprofile'); // Navigate to profile view after profile creation
     } catch (error) {
-      
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred!");
     }
-    // This is where you would save or pass profileData to a UserProfile component
   };
 
   return (
     <FormContainer>
+      <ToastContainer />
       <FormTitle>User Profile Information</FormTitle>
       <form onSubmit={handleSubmit}>
-        {/* Basic Information */}
         <SectionTitle>Basic Information</SectionTitle>
         <FormGroup>
           <Label>Name</Label>
-          <Input type="text" name="name" placeholder="Full Name" onChange={handleChange} required />
+          <Input
+            type="text"
+            name="name"
+            value={profileData.name}
+            placeholder="Full Name"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>Job Title</Label>
-          <Input type="text" name="jobTitle" placeholder="Job Title" onChange={handleChange} required />
+          <Input
+            type="text"
+            name="jobTitle"
+            value={profileData.jobTitle}
+            placeholder="Job Title"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>Description</Label>
-          <TextArea name="description" placeholder="Brief Description" onChange={handleChange} required />
+          <TextArea
+            name="description"
+            value={profileData.description}
+            placeholder="Brief Description"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>DOB</Label>
-          <Input type="date" name="dob" placeholder="Date Of Birth" onChange={handleChange} required />
+          <Input
+            type="date"
+            name="dob"
+            value={profileData.dob}
+            placeholder="Date Of Birth"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
         <FormGroup>
-  <Label>Age</Label>
-  <Input type="number" name="age" value={profileData.age} placeholder="Age" readOnly />
-</FormGroup>
+          <Label>Age</Label>
+          <Input type="number" name="age" value={profileData.age} placeholder="Age" readOnly />
+        </FormGroup>
         <FormGroup>
           <Label>Experience (years)</Label>
-          <Input type="number" name="experience" placeholder="Years of Experience" onChange={handleChange} required />
+          <Input
+            type="number"
+            name="experience"
+            value={profileData.experience}
+            placeholder="Years of Experience"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
-       
         <FormGroup>
           <Label>Location</Label>
-          <Input type="text" name="location" placeholder="Location" onChange={handleChange} required />
+          <Input
+            type="text"
+            name="location"
+            value={profileData.location}
+            placeholder="Location"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>Phone</Label>
-          <Input type="tel" name="phone" placeholder="Phone Number" onChange={handleChange} required />
+          <Input
+            type="tel"
+            name="phone"
+            value={profileData.phone}
+            placeholder="Phone Number"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
         <FormGroup>
           <Label>Email</Label>
-          <Input type="email" name="email" placeholder="Email" onChange={handleChange} required />
+          <Input
+            type="email"
+            name="email"
+            value={profileData.email}
+            placeholder="Email"
+            onChange={handleChange}
+            required
+            readOnly
+          />
         </FormGroup>
-
-        {/* Skills */}
         <SectionTitle>Skills</SectionTitle>
         <FormGroup>
           <Label>Skills</Label>
-          <Input type="text" name="skills" placeholder="Skills (comma separated)" onChange={handleChange} required />
+          <Input
+            type="text"
+            name="skills"
+            value={profileData.skills}
+            placeholder="Skills (comma separated)"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
-
-        {/* Experience */}
         <SectionTitle>Experience</SectionTitle>
         <FormGroup>
           <Label>Experience Details</Label>
-          <TextArea name="experiences" placeholder="Deine only latest experience in your related field" onChange={handleChange} required />
+          <TextArea
+            name="experiences"
+            value={profileData.experiences}
+            placeholder="Define only latest experience in your related field"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
-
-        {/* Education */}
         <SectionTitle>Education</SectionTitle>
         <FormGroup>
           <Label>Education</Label>
-          <TextArea name="education" placeholder="Educational background or Latest degree that you have" onChange={handleChange} required />
+          <TextArea
+            name="education"
+            value={profileData.education}
+            placeholder="Educational background or Latest degree that you have"
+            onChange={handleChange}
+            required
+          />
         </FormGroup>
-
-        {/* Accomplishments
-        <SectionTitle>Accomplishments</SectionTitle>
-        <FormGroup>
-          <Label>Accomplishments</Label>
-          <TextArea name="accomplishments" placeholder="Your accomplishments" onChange={handleChange} />
-        </FormGroup> */}
-
-        {/* Certifications */}
-        {/* <SectionTitle>Certifications</SectionTitle>
-        <FormGroup>
-          <Label>Certifications</Label>
-          <Input type='file' name="certifications" placeholder="Your certifications" onChange={handleChange} />
-        </FormGroup> */}
-
         <Button type="submit">Submit Profile</Button>
       </form>
     </FormContainer>

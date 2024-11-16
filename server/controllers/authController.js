@@ -9,6 +9,7 @@ require("../models/profileModel")
 require("dotenv").config()
 
 
+
 exports.signup = async (req, res) => {
     try {
         const { error, value } = userValidator.validate(req.body);

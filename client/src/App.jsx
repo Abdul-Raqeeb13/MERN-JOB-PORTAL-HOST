@@ -45,6 +45,10 @@ const router  = createBrowserRouter([
         path : "/userprofile",
         element: <ProtectedRoute  element={<UserProfileForm/>} />
       },
+      {
+        path : "/seeprofile",
+        element: <ProtectedRoute  element={<UserProfile/>} />
+      },
     ]
   }
   ,

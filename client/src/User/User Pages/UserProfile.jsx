@@ -1,39 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 
 const ProfileContainer = styled.div`
   display: flex;
   width: 100%;
-  margin: 50px auto;
+  margin: 2px auto;
   padding: 20px;
-  background: black;
-  color: yellow;
+  background: #222;
+  color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  font-family: 'Arial', sans-serif;
 `;
 
 const LeftSection = styled.div`
   width: 35%;
   text-align: center;
   padding: 20px;
+  border-right: 2px solid #ffd700;
 `;
 
 const ProfileImage = styled.img`
-  width: 120px;
-  height: 120px;
+  width: 80%;
   border-radius: 50%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `;
 
 const UserName = styled.h2`
   color: #ffd700;
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 10px;
 `;
 
 const JobTitle = styled.p`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
+  color: #f5a623;
   margin-bottom: 20px;
 `;
 
@@ -47,8 +50,8 @@ const Skills = styled.div`
 const Skill = styled.span`
   background: #333;
   color: yellow;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: 14px;
 `;
 
@@ -58,33 +61,36 @@ const RightSection = styled.div`
 `;
 
 const SectionTitle = styled.h3`
-  color: yellow;
-  font-size: 18px;
+  color: #ffd700;
+  font-size: 22px;
   border-bottom: 2px solid #ffd700;
   padding-bottom: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 `;
 
 const InfoContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
 `;
 
 const InfoItem = styled.div`
-  font-size: 14px;
-  color: yellow;
+  font-size: 16px;
+  color: #ffd700;
+  width: 45%;
 `;
 
 const Button = styled.button`
   background: #ffd700;
   color: black;
   border: none;
-  padding: 10px 15px;
+  padding: 12px 20px;
   border-radius: 5px;
   margin: 10px 5px;
   cursor: pointer;
   font-weight: bold;
+  text-transform: uppercase;
 
   &:hover {
     background: #333;
@@ -93,31 +99,65 @@ const Button = styled.button`
 `;
 
 const ExperienceContainer = styled.div`
-  background: #222;
-  padding: 10px;
+  background: #333;
+  padding: 15px;
   border-radius: 10px;
   margin: 10px 0;
   color: yellow;
 `;
 
 const UserProfile = () => {
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      const token = localStorage.getItem('Token');
+      const userId = localStorage.getItem('UserID');
+
+      try {
+        const response = await axios({
+          method: "GET",
+          url: `http://localhost:8000/user/userSeeProfile?userId=${userId}`,
+          headers: {
+            'Authorization': `${token}`,
+            'Content-Type': "application/json"
+          },
+        });
+
+        console.log('API Response:', response);
+        if (response.data && response.data.data) {
+          setProfile(response.data.data);
+        } else {
+          console.error('Profile data not found in response');
+        }
+      } catch (error) {
+        console.log('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <ProfileContainer>
       {/* Left Section */}
       <LeftSection>
-        <ProfileImage src="https://via.placeholder.com/120" alt="Profile" />
-        <UserName>John Doe</UserName>
-        <JobTitle>UX/UI Designer</JobTitle>
-        <p>
-          Full stack designer with hands-on experience solving problems for clients. Specializing in creating user-centered designs.
-        </p>
+        {/* Static Image before name */}
+        <ProfileImage src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDRlp-KGr_M94k_oor4Odjn2UzbAS7n1YoA&s" alt="Profile" />
+
+        <UserName>{profile?.name}</UserName>
+        <JobTitle>{profile?.jobTitle}</JobTitle>
+        <p>{profile?.description}</p>
+
         <SectionTitle>Skills</SectionTitle>
         <Skills>
-          <Skill>UI Design</Skill>
-          <Skill>UX</Skill>
-          <Skill>Adobe XD</Skill>
-          <Skill>Mobile Apps</Skill>
-          <Skill>Wireframing</Skill>
+          {profile?.skills?.map((skill, index) => (
+            <Skill key={index}>{skill}</Skill>
+          ))}
         </Skills>
         <Button>Add Note</Button>
       </LeftSection>
@@ -126,44 +166,26 @@ const UserProfile = () => {
       <RightSection>
         <SectionTitle>Basic Information</SectionTitle>
         <InfoContainer>
-          <InfoItem><strong>Age:</strong> 28 years</InfoItem>
-          <InfoItem><strong>Experience:</strong> 6 years</InfoItem>
-          <InfoItem><strong>Location:</strong> New York, USA</InfoItem>
-          <InfoItem><strong>Phone:</strong> +1 123 456 7890</InfoItem>
-          <InfoItem><strong>Email:</strong> johndoe@example.com</InfoItem>
+          <InfoItem><strong>Age:</strong> {profile?.age} years</InfoItem>
+          <InfoItem><strong>Experience:</strong> {profile?.experience} years</InfoItem>
+          <InfoItem><strong>Location:</strong> {profile?.location}</InfoItem>
+          <InfoItem><strong>Phone:</strong> {profile?.phone}</InfoItem>
+          <InfoItem><strong>Email:</strong> {profile?.email}</InfoItem>
         </InfoContainer>
+
         <Button>Download Resume</Button>
         <Button>Send Email</Button>
 
         <SectionTitle>Experience</SectionTitle>
-        <ExperienceContainer>
-          <p><strong>Company:</strong> Tech Corp</p>
-          <p><strong>Role:</strong> Product & UX Designer</p>
-          <p><strong>Duration:</strong> Jan 2020 - Present</p>
-        </ExperienceContainer>
-        <ExperienceContainer>
-          <p><strong>Company:</strong> Pixel Studio</p>
-          <p><strong>Role:</strong> UI/UX Designer</p>
-          <p><strong>Duration:</strong> Aug 2018 - Dec 2019</p>
-        </ExperienceContainer>
-        <ExperienceContainer>
-          <p><strong>Company:</strong> Creative Labs</p>
-          <p><strong>Role:</strong> Web Designer</p>
-          <p><strong>Duration:</strong> Feb 2016 - Jul 2018</p>
-        </ExperienceContainer>
+        {profile?.experiences && (
+          <ExperienceContainer>
+            <p>{profile?.experiences}</p>
+          </ExperienceContainer>
+        )}
 
         <SectionTitle>Education</SectionTitle>
         <ExperienceContainer>
-          <p><strong>Degree:</strong> Bachelor of Design</p>
-          <p><strong>University:</strong> Design University</p>
-          <p><strong>Year:</strong> 2012 - 2016</p>
-        </ExperienceContainer>
-
-        <SectionTitle>Certifications</SectionTitle>
-        <ExperienceContainer>
-          <p><strong>Certificate:</strong> UX Design Professional</p>
-          <p><strong>Institution:</strong> UX Academy</p>
-          <p><strong>Year:</strong> 2021</p>
+          <p><strong>Degree:</strong> {profile?.education}</p>
         </ExperienceContainer>
       </RightSection>
     </ProfileContainer>
