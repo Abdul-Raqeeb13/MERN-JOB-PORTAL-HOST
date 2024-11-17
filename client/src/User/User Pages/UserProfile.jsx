@@ -119,12 +119,11 @@ const UserProfile = () => {
           method: "GET",
           url: `http://localhost:8000/user/userSeeProfile?userId=${userId}`,
           headers: {
-            'Authorization': `${token}`,
+            Authorization: `${token}`,
             'Content-Type': "application/json"
           },
         });
 
-        console.log('API Response:', response);
         if (response.data && response.data.data) {
           setProfile(response.data.data);
         } else {
@@ -146,46 +145,48 @@ const UserProfile = () => {
     <ProfileContainer>
       {/* Left Section */}
       <LeftSection>
-        {/* Static Image before name */}
         <ProfileImage src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHDRlp-KGr_M94k_oor4Odjn2UzbAS7n1YoA&s" alt="Profile" />
-
-        <UserName>{profile?.name}</UserName>
-        <JobTitle>{profile?.jobTitle}</JobTitle>
-        <p>{profile?.description}</p>
+        <UserName>{profile.name}</UserName>
+        <JobTitle>{profile.jobTitle}</JobTitle>
+        <p>{profile.description}</p>
 
         <SectionTitle>Skills</SectionTitle>
         <Skills>
-          {profile?.skills?.map((skill, index) => (
+          {profile.skills?.split(',').map((skill, index) => (
             <Skill key={index}>{skill}</Skill>
           ))}
         </Skills>
-        <Button>Add Note</Button>
+        {/* <Button>Add Note</Button> */}
       </LeftSection>
 
       {/* Right Section */}
       <RightSection>
         <SectionTitle>Basic Information</SectionTitle>
         <InfoContainer>
-          <InfoItem><strong>Age:</strong> {profile?.age} years</InfoItem>
-          <InfoItem><strong>Experience:</strong> {profile?.experience} years</InfoItem>
-          <InfoItem><strong>Location:</strong> {profile?.location}</InfoItem>
-          <InfoItem><strong>Phone:</strong> {profile?.phone}</InfoItem>
-          <InfoItem><strong>Email:</strong> {profile?.email}</InfoItem>
+          <InfoItem><strong>Age:</strong> {profile.age} years</InfoItem>
+          <InfoItem><strong>Experience:</strong> {profile.experience} years</InfoItem>
+          <InfoItem><strong>Location:</strong> {profile.location}</InfoItem>
+          <InfoItem><strong>Phone:</strong> {profile.phone}</InfoItem>
+          <InfoItem><strong>Email:</strong> {profile.email}</InfoItem>
         </InfoContainer>
 
-        <Button>Download Resume</Button>
-        <Button>Send Email</Button>
+        {/* <Button>Download Resume</Button>
+        <Button>Send Email</Button> */}
 
         <SectionTitle>Experience</SectionTitle>
-        {profile?.experiences && (
-          <ExperienceContainer>
-            <p>{profile?.experiences}</p>
+        {profile.experiences?.map((exp, index) => (
+          <ExperienceContainer key={exp._id}>
+            <p><strong>Company:</strong> {exp.company}</p>
+            <p><strong>Role:</strong> {exp.role}</p>
+            <p><strong>Duration:</strong> {exp.duration}</p>
           </ExperienceContainer>
-        )}
+        ))}
 
         <SectionTitle>Education</SectionTitle>
         <ExperienceContainer>
-          <p><strong>Degree:</strong> {profile?.education}</p>
+          <p><strong>Degree:</strong> {profile.degree}</p>
+          <p><strong>University:</strong> {profile.university}</p>
+          <p><strong>Year:</strong> {profile.year}</p>
         </ExperienceContainer>
       </RightSection>
     </ProfileContainer>

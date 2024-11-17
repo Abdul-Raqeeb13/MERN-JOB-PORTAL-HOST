@@ -5,6 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../User Pages/AuthContext';
+
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -92,6 +94,9 @@ const BackButton = styled(Link)`
 `;
 
 const JobDetail = () => {
+
+  const { profileComplete } = useAuth();
+
   const nav = useNavigate();
   const [job, setJob] = useState(null);
   const [error, setError] = useState('');
@@ -128,38 +133,59 @@ const JobDetail = () => {
     const userId = localStorage.getItem("UserID");
     const token = localStorage.getItem('Token');
 
-    const jobAndUserID = {
-      jobId,
-      userId
-    };
-
-    try {
-      const response = await axios({
-        method: "POST",
-        url: 'http://localhost:8000/user/applyjob',
-        headers: {
-          'Authorization': `${token}`,
-          'Content-Type': "application/json"
-        },
-        data: JSON.stringify(jobAndUserID)
-      });
-
-      if (response.status === 200 || response.status === 201) {
-        toast.success(response.data.message || "Job applied successfully!", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "dark",
+    console.log(profileComplete);
+    
+    
+    if (!profileComplete) {
+      alert("please make you profil first")
+      nav('/userprofile')
+      return null
+    }
+    else{
+      const jobAndUserID = {
+        jobId,
+        userId
+      };
+  
+      try {
+        const response = await axios({
+          method: "POST",
+          url: 'http://localhost:8000/user/applyjob',
+          headers: {
+            'Authorization': `${token}`,
+            'Content-Type': "application/json"
+          },
+          data: JSON.stringify(jobAndUserID)
         });
-
-        setTimeout(() => {
-          nav('/userappliedjobs');
-        }, 800);
-      } else {
-        toast.warn("Unexpected response from server. Please try again.", {
+  
+        if (response.status === 200 || response.status === 201) {
+          toast.success(response.data.message || "Job applied successfully!", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "dark",
+          });
+  
+          setTimeout(() => {
+            nav('/userappliedjobs');
+          }, 1100);
+        } else {
+          toast.warn("Unexpected response from server. Please try again.", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "dark",
+          });
+        }
+      } catch (error) {
+        const errorMessage = error.response?.data?.message || "Failed to apply for the job.";
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
@@ -169,18 +195,9 @@ const JobDetail = () => {
           theme: "dark",
         });
       }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to apply for the job.";
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "dark",
-      });
     }
+
+  
   };
 
   return (

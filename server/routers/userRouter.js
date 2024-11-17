@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const {signup, login} = require('../controllers/authController')
-const {userViewJobs, userapplyjob, userAppliedJobs, JobDetails, userMakeProfile, userEmail, getProfile} = require('../controllers/userController')
+const {userViewJobs, userapplyjob, userAppliedJobs, JobDetails, userMakeProfile, userEmail, getProfile, getProfileStatus} = require('../controllers/userController')
 const {userMiddleware} = require("../middleware/userMiddleware")
 // const multer = require("multer");
 // const path = require("path");
@@ -30,5 +30,6 @@ router.get('/jobdetails/:jobid',userMiddleware, JobDetails)
 router.post('/usermakeprofile',userMiddleware, userMakeProfile)
 router.get("/getUserEmail", userMiddleware, userEmail)
 router.get("/userSeeProfile", userMiddleware, getProfile)
+router.get("/getProfileStatus", userMiddleware, getProfileStatus)
 
 module.exports = router

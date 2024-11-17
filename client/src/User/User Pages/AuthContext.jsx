@@ -33,11 +33,14 @@ export const AuthProvider = ({ children }) => {
 
   const isprofileComplete = () => {
     setProfileComplete(true)
-
+  }
+  
+  const ChangeIsProfileComplete = () => {
+    setProfileComplete(false)
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, adminLogin, profileComplete, isprofileComplete }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, adminLogin, profileComplete, isprofileComplete, ChangeIsProfileComplete }}>
       {children}
     </AuthContext.Provider>
   );

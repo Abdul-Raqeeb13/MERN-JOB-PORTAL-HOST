@@ -1,13 +1,6 @@
 const joi = require('joi');
 
-const profileValidator  = joi.object({
-
-    // userid: joi.string().required().messages({
-    //     'string.base': "User ID must be a string",
-    //     'string.empty': "User ID cannot be empty",
-    //     'any.required': "User ID is required"
-    // }),
-
+const profileValidator = joi.object({
     name: joi.string().trim().required().messages({
         'string.base': "Name must be a string",
         'string.empty': "Name cannot be empty",
@@ -35,6 +28,24 @@ const profileValidator  = joi.object({
         'number.base': "Age must be a number",
         'number.min': "Age must be a positive number",
         'any.required': "Age is required"
+    }),
+
+    degree: joi.string().trim().required().messages({
+        'string.base': "Degree must be a string",
+        'string.empty': "Degree cannot be empty",
+        'any.required': "Degree is required"
+    }),
+
+    university: joi.string().trim().required().messages({
+        'string.base': "University must be a string",
+        'string.empty': "University cannot be empty",
+        'any.required': "University is required"
+    }),
+
+    year: joi.string().trim().required().messages({
+        'string.base': "Year must be a string",
+        'string.empty': "Year cannot be empty",
+        'any.required': "Year is required"
     }),
 
     experience: joi.number().integer().min(0).required().messages({
@@ -69,17 +80,29 @@ const profileValidator  = joi.object({
         'any.required': "Skills are required"
     }),
 
-    experiences: joi.string().trim().required().messages({
-        'string.base': "Experience details must be a string",
-        'string.empty': "Experience details cannot be empty",
-        'any.required': "Experience details are required"
-    }),
-
-    education: joi.string().trim().required().messages({
-        'string.base': "Education must be a string",
-        'string.empty': "Education cannot be empty",
-        'any.required': "Education is required"
-    }),
+    experiences: joi.array().items(
+        joi.object({
+            company: joi.string().trim().required().messages({
+                'string.base': "Company must be a string",
+                'string.empty': "Company cannot be empty",
+                'any.required': "Company is required"
+            }),
+            role: joi.string().trim().required().messages({
+                'string.base': "Role must be a string",
+                'string.empty': "Role cannot be empty",
+                'any.required': "Role is required"
+            }),
+            duration: joi.string().trim().required().messages({
+                'string.base': "Duration must be a string",
+                'string.empty': "Duration cannot be empty",
+                'any.required': "Duration is required"
+            })
+        })
+    ).min(1).required().messages({
+        'array.base': "Experiences must be an array",
+        'array.min': "At least one experience is required",
+        'any.required': "Experiences are required"
+    })
 });
 
-module.exports = profileValidator ;
+module.exports = profileValidator;

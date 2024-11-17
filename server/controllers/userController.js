@@ -214,11 +214,12 @@ exports.userMakeProfile = async (req, res) => {
     try {   
         
             const  userid = req.query.userId
-            // console.log(userid);
+            console.log(userid);
             
            const { error, value } = profileValidator.validate(req.body);
             if (error) {
-                // console.log("try"  , error);
+                
+                console.log("try"  , error);
                 
                 return res.status(400).send({
                     message: error.details[0].message
@@ -227,10 +228,12 @@ exports.userMakeProfile = async (req, res) => {
               
                 // Check if email already exists
                     req.body.userId = userid
+                    req.body.profileComplete = true
                     // console.log(req.body);
                     
                     const userprofile = await createProfile(req.body); // This should save the user and return the saved user object
-    
+                    console.log(userprofile);
+                    
                     return res.status(200).send({
                         message: 'Profile successfully created',
                         user: value // Assuming 'value' contains validated user data
@@ -238,7 +241,7 @@ exports.userMakeProfile = async (req, res) => {
                 }
             
         } catch (error) {
-            // console.log("catch" , error);
+            console.log("catch" , error);
             
             res.status(500).send({
                 message: 'profile making failed',
@@ -273,12 +276,12 @@ exports.userEmail = async (req, res) => {
 
 // Function to get the user's profile
 exports.getProfile = async (req, res) => {
-    console.log("hello");
+    // console.log("hello");
     
     try {
         // Retrieve the userId from the query string or params
         const userId = req.query.userId || req.params.userId;
-        console.log(userId);
+        // console.log(userId);
         
         // Validate userId is provided
         if (!userId) {
@@ -305,6 +308,60 @@ exports.getProfile = async (req, res) => {
             success: true,
             data: userProfile
         });
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching the user profile.",
+            error: error.message
+        });
+    }
+};
+
+
+exports.getProfileStatus = async (req, res) => {
+    console.log("hello from status");
+    
+    try {
+        // Retrieve the userId from the query string or params
+        const userId = req.query.userId || req.params.userId;
+        console.log(userId);
+        
+        // Validate userId is provided
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required."
+            });
+        }
+
+        // Fetch the user's profile data using the userId
+        const userProfile = await findUserProfile( userId );
+        if(userProfile == null){
+            return res.status(400).json({
+                success: false,
+                data: false
+            });
+        }
+        else{
+            console.log(userProfile.profileComplete);
+        
+        // If no profile is found, return an error
+        if (!userProfile) {
+            return res.status(404).json({
+                success: false,
+                message: "User profile not found."
+            });
+        }
+
+        // If profile is found, return the profile data
+        return res.status(200).json({
+            success: true,
+            data: userProfile.profileComplete
+        });
+        }
+        
+        
     } catch (error) {
         console.error("Error fetching user profile:", error);
         return res.status(500).json({

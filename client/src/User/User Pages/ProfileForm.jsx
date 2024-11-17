@@ -3,6 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../User Pages/AuthContext';
 
 const FormContainer = styled.div`
   width: 100%;
@@ -74,6 +75,8 @@ const Button = styled.button`
 `;
 
 const UserProfileForm = () => {
+  const { isprofileComplete } = useAuth();
+
   const [profileData, setProfileData] = useState({
     name: '',
     jobTitle: '',
@@ -85,20 +88,74 @@ const UserProfileForm = () => {
     phone: '',
     email: '',
     skills: '',
-    experiences: '',
-    education: '',
+    experiences: [], // Change to an array
+    degree: '',
+    university: '',
+    year: '',
   });
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const profileComplete = localStorage.getItem('profileComplete');
-    console.log(profileComplete);
 
-    if (profileComplete) {
-      navigate('/seeprofile');  // If profile is complete, navigate to profile page
-    }
-  }, [navigate]);
+  useEffect(() => {
+    const fetchProfileStatus = async () => {
+      try {
+        const token = localStorage.getItem('Token');
+        const userId = localStorage.getItem('UserID');
+
+        const response = await axios({
+          method: "GET",
+          url: `http://localhost:8000/user/getProfileStatus?userId=${userId}`,
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': "application/json",
+          },
+        });
+
+        console.log(response.data.data);
+        if (response.data.data) {
+          await isprofileComplete()
+          navigate('/seeprofile');
+          return null
+        }
+
+      
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfileStatus();
+  }, []);
+  // useEffect(() => {
+
+  //   try {
+  //     const fetchProfileStatus = async () => {
+       
+  //         const token = localStorage.getItem('Token');
+  //         const userId = localStorage.getItem('UserID');
+  
+  //         const response = await axios({
+  //           method: "GET",
+  //           url: `http://localhost:8000/user/getProfileStatus?userId=${userId}`,
+  //           headers: {
+  //             Authorization: `${token}`,
+  //             'Content-Type': "application/json",
+  //           },
+  //         });
+  
+        
+  //     };
+  //   } catch (error) {
+      
+  //   }
+  //   // const profileComplete = localStorage.getItem('profileComplete');
+  //   // console.log(profileComplete);
+
+  //   // if (profileComplete) {
+  //   //   navigate('/seeprofile');  // If profile is complete, navigate to profile page
+  //   // }
+  // }, [navigate]);
 
   useEffect(() => {
     const fetchUserEmail = async () => {
@@ -127,6 +184,25 @@ const UserProfileForm = () => {
     fetchUserEmail();
   }, []);
 
+
+  const handleExperienceChange = (index, e) => {
+    const updatedExperiences = [...profileData.experiences];
+    updatedExperiences[index][e.target.name] = e.target.value;
+    setProfileData({ ...profileData, experiences: updatedExperiences });
+  };
+
+  const addExperience = () => {
+    setProfileData((prevData) => ({
+      ...prevData,
+      experiences: [...prevData.experiences, { company: '', role: '', duration: '' }],
+    }));
+  };
+
+  const removeExperience = (index) => {
+    const updatedExperiences = profileData.experiences.filter((_, i) => i !== index);
+    setProfileData({ ...profileData, experiences: updatedExperiences });
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -144,11 +220,14 @@ const UserProfileForm = () => {
     }
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('Token');
     const userId = localStorage.getItem('UserID');
-
+    console.log(profileData);
+    
     try {
       const response = await axios({
         method: "POST",
@@ -160,7 +239,15 @@ const UserProfileForm = () => {
         data: JSON.stringify(profileData),
       });
 
-      toast.success("Profile successfully created!");
+      toast.success("Profile created successfully!", {
+        position: "top-center",
+        autoClose: 1900,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+    });;
       localStorage.setItem("profileComplete", true);
       navigate('/seeprofile'); // Navigate to profile view after profile creation
     } catch (error) {
@@ -279,24 +366,75 @@ const UserProfileForm = () => {
             required
           />
         </FormGroup>
+
         <SectionTitle>Experience</SectionTitle>
+        {profileData.experiences.map((exp, index) => (
+          <FormGroup key={index}>
+            <Label>Company Name</Label>
+            <Input
+              type="text"
+              name="company"
+              value={exp.company}
+              placeholder="Company Name"
+              onChange={(e) => handleExperienceChange(index, e)}
+              required
+            />
+            <Label>Role</Label>
+            <Input
+              type="text"
+              name="role"
+              value={exp.role}
+              placeholder="Role"
+              onChange={(e) => handleExperienceChange(index, e)}
+              required
+            />
+            <Label>Duration</Label>
+            <Input
+              type="text"
+              name="duration"
+              value={exp.duration}
+              placeholder="Duration (e.g., 2 years)"
+              onChange={(e) => handleExperienceChange(index, e)}
+              required
+            />
+            <Button type="button" onClick={() => removeExperience(index)}>
+              Remove Experience
+            </Button>
+          </FormGroup>
+        ))}
+        <Button type="button" onClick={addExperience}>
+          Add Experience
+        </Button>
+        <SectionTitle>Education</SectionTitle>
         <FormGroup>
-          <Label>Experience Details</Label>
-          <TextArea
-            name="experiences"
-            value={profileData.experiences}
-            placeholder="Define only latest experience in your related field"
+          <Label>Degree</Label>
+          <Input
+            type="text"
+            name="degree"
+            value={profileData.degree}
+            placeholder="Educational background or Latest degree that you have"
             onChange={handleChange}
             required
           />
         </FormGroup>
-        <SectionTitle>Education</SectionTitle>
         <FormGroup>
-          <Label>Education</Label>
-          <TextArea
-            name="education"
-            value={profileData.education}
-            placeholder="Educational background or Latest degree that you have"
+          <Label>University</Label>
+          <Input
+            type="text"
+            name="university"
+            value={profileData.university}
+            placeholder="University"
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>Years</Label>
+          <Input
+            type="text"
+            name="year"
+            value={profileData.year}
+            placeholder="Years"
             onChange={handleChange}
             required
           />

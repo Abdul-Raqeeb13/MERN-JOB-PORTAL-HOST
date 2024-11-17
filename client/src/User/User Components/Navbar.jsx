@@ -10,8 +10,10 @@ import { useAuth } from '../User Pages/AuthContext';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+
 function MyNavbar() {
-    const { isAuthenticated, login, logout, adminLogin } = useAuth();
+    const { isAuthenticated, login, logout, adminLogin ,ChangeIsProfileComplete } = useAuth();
     const [showForm, setShowForm] = useState(false);
     const [show, setShow] = useState(false);
     const [userData, setUserData] = useState({
@@ -19,7 +21,6 @@ function MyNavbar() {
         email: "",
         password: "",
         usertype: "user",
-        // file: null
     });
     const [message, setMessage] = useState("");
     const nav = useNavigate();
@@ -37,7 +38,6 @@ function MyNavbar() {
             email: "",
             password: "",
             usertype: "user",
-            // file: null
         });
         setMessage("");
         setShowForm(false);
@@ -51,98 +51,193 @@ function MyNavbar() {
         }));
     };
 
-    // const handleFileChange = (event) => {
-    //     const file = event.target.files[0];
-    //     setUserData((prevData) => ({
-    //         ...prevData,
-    //         file: file,
-    //     }));
+    // const buildDataToSend = () => {
+    //     const formData = new FormData();
+    //     if (showForm) {
+    //         return { email: userData.email, password: userData.password };
+    //     } else {
+    //         formData.append('email', userData.email);
+    //         formData.append('password', userData.password);
+    //         formData.append('name', userData.name);
+    //         formData.append('usertype', userData.usertype);
+    //         if (userData.file) {
+    //             formData.append('UserCV', userData.file);
+    //         }
+    //         return formData;
+    //     }
     // };
 
-    const buildDataToSend = () => {
-        const formData = new FormData();
-        if (showForm) {
-            return { email: userData.email, password: userData.password };
-        } else {
-            formData.append('email', userData.email);
-            formData.append('password', userData.password);
-            formData.append('name', userData.name);
-            formData.append('usertype', userData.usertype);
-            if (userData.file) {
-                formData.append('UserCV', userData.file);
-            }
-            return formData;
-        }
-    };
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const dataToSend = showForm
+    //         ? { email: userData.email, password: userData.password } // Only send email and password for login
+    //         : userData; // Send all fields for signup
+
+    //     try {
+    //         const response = await axios({
+    //             method: "POST",
+    //             url: showForm ? 'http://localhost:8000/user/login' : 'http://localhost:8000/user/signup',
+    //             headers: { 'Content-Type': "application/json" },
+    //             data: JSON.stringify(dataToSend),
+    //         });
+
+    //         console.log("Response:", response.data); // Log response for debugging
+
+    //         if (response.data.token) {
+    //             const { usertype, _id: userId } = response.data.data;
+    //             localStorage.setItem("Token", response.data.token);
+    //             localStorage.setItem("UserID", userId);
+
+    //             toast.success("Login success", {
+    //                 position: "top-center",
+    //                 autoClose: 2000,
+    //                 hideProgressBar: false,
+    //                 closeOnClick: true,
+    //                 pauseOnHover: true,
+    //                 draggable: true,
+    //                 theme: "dark",
+    //             });
+
+    //             setTimeout(() => {
+    //                 handleClose();
+    //                 usertype === 'user' ? login() : adminLogin(); // Update auth context state
+    //                 nav(usertype === 'user' ? '/' : '/admin', { replace: true });
+    //             }, 2000);
+    //         } else if (response.data.message === "Signup successful!") {
+    //             toast.success("Account created successfully!", {
+    //                 position: "top-center",
+    //                 autoClose: 2000,
+    //                 hideProgressBar: false,
+    //                 closeOnClick: true,
+    //                 pauseOnHover: true,
+    //                 draggable: true,
+    //                 theme: "dark",
+    //             });
+
+    //             setTimeout(() => {
+    //                 resetForm();
+    //                 setShowForm(true);
+    //             }, 2100);
+    //         } else {
+    //             setMessage("Something went wrong, please try again.");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error during submit:", error); // Log error for debugging
+    //         toast.error(error.response?.data?.message || "Something went wrong", {
+    //             position: "top-center",
+    //             autoClose: 2000,
+    //             hideProgressBar: false,
+    //             closeOnClick: true,
+    //             pauseOnHover: true,
+    //             draggable: true,
+    //             theme: "dark",
+    //         });
+    //         setMessage(error.response?.data?.message || "Something went wrong");
+    //     }
+    // };
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const dataToSend = showForm 
-        ? { email: userData.email, password: userData.password } // Only send email and password for login
-        : userData; // Send all fields for signup
+    
+        // Prevent multiple toasts by dismissing any existing ones
+        // toast.dismiss();
+    
+        const dataToSend = showForm
+            ? { email: userData.email, password: userData.password }
+            : userData;
     
         try {
             const response = await axios({
                 method: "POST",
                 url: showForm ? 'http://localhost:8000/user/login' : 'http://localhost:8000/user/signup',
                 headers: { 'Content-Type': "application/json" },
-                data: JSON.stringify(dataToSend)  
+                data: JSON.stringify(dataToSend),
             });
     
-            console.log("Response:", response.data); // Log response for debugging
+            console.log("Response:", response.data); // For debugging
     
             if (response.data.token) {
                 const { usertype, _id: userId } = response.data.data;
                 localStorage.setItem("Token", response.data.token);
                 localStorage.setItem("UserID", userId);
     
-                toast.success("Login success", { /* toast options */ });
+                toast.success("Login successful!", {
+                    position: "top-right",
+                    autoClose: 1900,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "dark",
+                });
+    
                 setTimeout(() => {
                     handleClose();
-                    usertype === 'user' ? login() : adminLogin(); // Update auth context state
+                    usertype === 'user' ? login() : adminLogin();
                     nav(usertype === 'user' ? '/' : '/admin', { replace: true });
                 }, 2000);
             } else if (response.data.message === "Signup successful!") {
-                toast.success("Account created successfully!", { /* toast options */ });
+                toast.success("Account created successfully!", {
+                    position: "top-center",
+                    autoClose: 1900,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "dark",
+                });
+    
                 setTimeout(() => {
                     resetForm();
                     setShowForm(true);
-                }, 2100);
+                }, 2000);
             } else {
-                setMessage("Something went wrong, please try again.");
+                throw new Error("Unexpected response.");
             }
         } catch (error) {
-            console.error("Error during submit:", error); // Log error for debugging
-            toast.error(error.response?.data?.message || "Something went wrong", { /* toast options */ });
-            setMessage(error.response?.data?.message || "Something went wrong");
+            console.error("Error during submit:", error); // Debugging
+            toast.error(error.response?.data?.message || "Something went wrong", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            });
         }
     };
     
-    
-    const handleLogout = () => {
-        toast.dismiss(); // Dismiss previous toasts
+
+
+    const handleLogout = async () => {
+        // toast.dismiss(); // Dismiss previous toasts
         toast.success("Logout success", {
             position: "top-center",
-            autoClose: 2000,
+            autoClose: 1900,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             theme: "dark",
         });
+
+        await ChangeIsProfileComplete()
+        
         setTimeout(() => {
             localStorage.clear();
             logout();
             nav('/');
         }, 2000);
     };
-    
 
     return (
         <>
             <ToastContainer />
             <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-            <Modal.Header closeButton>
+                <Modal.Header closeButton>
                     <Modal.Title>{showForm ? "Login" : "SignUp"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -153,16 +248,6 @@ function MyNavbar() {
                         )}
                         <TextField id="email" label="Email" variant="outlined" name="email" value={userData.email} onChange={handleInputChange} className="custom-modal-input" />
                         <TextField id="password" label="Password" variant="outlined" name="password" value={userData.password} onChange={handleInputChange} className="custom-modal-input" />
-                        {/* {!showForm && (
-                          <input
-                          type="file"
-                          accept=".pdf, application/pdf" // Accepts both the .pdf extension and the PDF MIME type
-                          required
-                          name="UserCV"
-                          onChange={handleFileChange}
-                          style={{ marginTop: '10px' }}
-                      />
-                        )} */}
                         <Button variant="contained" type="submit" className="custom-modal-btn">
                             {showForm ? "Login" : "Create Account"}
                         </Button>
@@ -184,13 +269,13 @@ function MyNavbar() {
                             HOME
                         </NavLink>
                         <NavLink to="/userjobs" className={({ isActive }) => isActive ? 'nav-link active' : "nav-link"}>
-                           JOBS
+                            JOBS
                         </NavLink>
                         <NavLink to="/userappliedjobs" className={({ isActive }) => isActive ? 'nav-link active' : "nav-link"}>
-                           APPLIED JOBS
+                            APPLIED JOBS
                         </NavLink>
                         <NavLink to="/userprofile" className={({ isActive }) => isActive ? 'nav-link active' : "nav-link"}>
-                           PROFILE
+                            PROFILE
                         </NavLink>
                     </Nav>
                     <Form inline className="ms-lg-5 ms-3 search-form">

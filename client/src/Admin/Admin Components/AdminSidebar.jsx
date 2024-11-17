@@ -20,7 +20,7 @@ export default function AdminSidebar() {
 
     toast.success("Logout Successful", {
       position: "top-center",
-      autoClose: 1000,
+      autoClose: 900,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -32,24 +32,13 @@ export default function AdminSidebar() {
     setTimeout(async () => {
       logout()
       nav("/")
-    }, 900);
+    }, 1000);
 
   }
 
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
+      <ToastContainer />
 
 
       <div className="sidebarContainer">
