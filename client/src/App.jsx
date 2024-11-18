@@ -1,6 +1,3 @@
-// import { Button as BootstrapButton } from 'react-bootstrap';
-// import { Button as MUIButton } from '@mui/material';
-
 // users components
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import UserAppLayout from './User/User Pages/UserAppLayout';
@@ -12,13 +9,14 @@ import UserAppliedJobs from './User/User Pages/UserAppliedJobs';
 import JobDetail from './User/User Pages/JobDetail';
 import UserProfile from './User/User Pages/UserProfile';
 import UserProfileForm from './User/User Pages/ProfileForm';
+
 // admins components
 import AdminAppLayout from './Admin/Admin Pages/AdminAppLayout';
 import AdminDashboard from './Admin/Admin Pages/AdminDashboard';
 import AdminAddJobs from './Admin/Admin Pages/AdminAddJobs'
 import AdminViewJobs from './Admin/Admin Pages/AdminViewJobs';
 import AdminAppliedJobs from './Admin/Admin Pages/AdminAppliedJobs';
-
+import AdminUserProfile from './Admin/Admin Pages/AdminUserProfile'
 
 const router  = createBrowserRouter([
   {
@@ -72,10 +70,10 @@ const router  = createBrowserRouter([
         path: "/admin/appliedjob",
         element: <AdminAppliedJobs />
       },
-      // {
-      //   path: "/admin/addevents",
-      //   element: <AddEvent />
-      // },
+      {
+        path: "/admin/adminUserProfile/:userId",
+        element: <AdminUserProfile />
+      },
       // {
       //   path: "/admin/ViewEvent",
       //   element: <ViewEvent/>

@@ -9,49 +9,48 @@ const Container = styled.div`
   flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
-  background-color: #000;
+  background-color: #ffffff;
   min-height: 100vh;
 `;
 
 const JobCard = styled.div`
-  background: linear-gradient(135deg, #333, #ffdd57);
+  background: linear-gradient(135deg, #1e3a8a, #60a5fa); /* Blue gradient background */
   border-radius: 15px;
   padding: 20px;
-  width:285px;
+  width: 285px;
   height: 300px; /* Fixed height to prevent full height expansion */
-  box-shadow: 0 6px 12px rgba(255, 223, 0, 0.3);
+  box-shadow: 0 6px 12px rgba(96, 165, 250, 0.3); /* Lighter blue shadow */
   transition: transform 0.3s ease-in-out;
-  color: #fff;
+  color: #ffffff;
   overflow: hidden; /* Hide overflow if you want to cut off excess content */
-  border: 1px solid #ffdd57;
+  border: 1px solid #60a5fa;
 
   &:hover {
     transform: translateY(-10px);
-    box-shadow: 0 12px 24px rgba(255, 223, 0, 0.5);
+    box-shadow: 0 12px 24px rgba(96, 165, 250, 0.5);
   }
 `;
-
 
 const JobTitle = styled.h3`
   margin: 0;
   font-size: 1.5rem;
-  color: #ffdd57;
+  color: #ffffff;
 `;
 
 const CompanyName = styled.p`
   font-size: 1rem;
-  color: #cccccc;
+  color: #e2e8f0;
   margin: 10px 0;
 `;
 
 const JobDetails = styled.p`
   font-size: 0.9rem;
-  color: #e6e6e6;
+  color: #cbd5e1;
   line-height: 1.6;
 `;
 
 const DeleteButton = styled.button`
-  background-color: #ff4d4f;
+  background-color: #f87171; /* Light red button */
   color: white;
   border: none;
   padding: 10px 15px;
@@ -63,14 +62,14 @@ const DeleteButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #ff1a1c;
+    background-color: #f44336; /* Darker red on hover */
   }
 `;
 
 const Heading = styled.h1`
-  color: #ffdd57;
+  color: #1e3a8a; /* Dark blue */
   text-align: center;
-  background-color: #000;
+  background-color: #ffffff;
   padding: 20px;
   margin: 0;
 `;
@@ -134,7 +133,7 @@ const AdminViewJobs = () => {
     <>
       <Heading>Admin View Jobs</Heading>
       <Container>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
         {jobs.length > 0 ? (
           jobs.slice(0).reverse().map(job => (
             <JobCard key={job._id}>
@@ -149,7 +148,7 @@ const AdminViewJobs = () => {
             </JobCard>
           ))
         ) : (
-          <p style={{ color: '#fff' }}></p>
+          <p style={{ color: '#1e3a8a', textAlign: 'center' }}>No Jobs Available</p>
         )}
       </Container>
     </>

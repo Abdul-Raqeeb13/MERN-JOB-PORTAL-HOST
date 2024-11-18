@@ -1,39 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useNavigation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function AdminAppliedJobs() {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState('');
-
-  // useEffect(() => {
-  //   const fetchAdminAppliedJobs = async () => {
-  //     const token = localStorage.getItem('Token');
-  //     try {
-  //       const response = await axios({
-  //         method: "GET",
-  //         url: `http://localhost:8000/admin/adminappliedjobs`,
-  //         headers: {
-  //           'Authorization': `${token}`,
-  //           'Content-Type': "application/json"
-  //         },
-  //       });
-
-
-  //       if (response.data && response.data.success) {
-  //         setJobs(response.data.data);
-  //       } else {
-  //         setError('No jobs available');
-  //       }
-  //     } catch (error) {
-  //       setError(error.response?.data?.message || "An error occurred while fetching jobs");
-  //     }
-  //   };
-  //   fetchAdminAppliedJobs();
-  //   console.log("run");
-    
-  // }, []);
-
+  const nav = useNavigation();
 
   const fetchAdminAppliedJobs = async () => {
     console.log("run");
@@ -59,7 +33,6 @@ export default function AdminAppliedJobs() {
     }
   };
 
-  // Call fetchAdminAppliedJobs on component mount
   useEffect(() => {
     fetchAdminAppliedJobs();
     console.log("Initial fetch run");
@@ -73,7 +46,7 @@ export default function AdminAppliedJobs() {
         jobId,
         userid,
         JobDetails,
-      }
+      };
 
       const response = await axios({
         method: "POST",
@@ -88,49 +61,11 @@ export default function AdminAppliedJobs() {
       setJobs(prevJobs => prevJobs.map(job =>
         job._id === jobId ? { ...job, status: 'Accepted' } : job
       ));
-      fetchAdminAppliedJobs()
+      fetchAdminAppliedJobs();
     } catch (error) {
       setError(error.response?.data?.message || "Failed to accept the job");
     }
   };
-
-  const handleViewCV = async (userid) => {
-    try {
-        const token = localStorage.getItem('Token');
-        
-        if (!token) {
-            console.error("Authorization token is missing.");
-            return;
-        }
-
-        const response = await axios.get(`http://localhost:8000/admin/adminGetUserCV`, {
-            headers: {
-                'Authorization': token,
-                'Content-Type': "application/json"
-            },
-            params: { userId: userid }
-        });
-
-        if (response.status === 200 && response.data.pdfName) {
-            window.open(`http://localhost:8000/uploads/${response.data.pdfName}`, "_blank", "noreferrer");
-        } else {
-            console.warn("CV not found or the response was incomplete.");
-        }
-    } catch (error) {
-        if (error.response) {
-            // Server responded with a status code outside the 2xx range
-            console.error("Error fetching CV:", error.response.data.message || error.response.statusText);
-        } else if (error.request) {
-            // Request was made, but no response received
-            console.error("No response from server:", error.request);
-        } else {
-            // Something went wrong in setting up the request
-            console.error("Error:", error.message);
-        }
-    }
-};
-
-
 
   const handleReject = async (jobId, userid, JobDetails) => {
     const token = localStorage.getItem('Token');
@@ -140,7 +75,7 @@ export default function AdminAppliedJobs() {
         jobId,
         userid,
         JobDetails,
-      }
+      };
 
       const response = await axios({
         method: "POST",
@@ -156,7 +91,7 @@ export default function AdminAppliedJobs() {
         job._id === jobId ? { ...job, status: 'Rejected' } : job
       ));
 
-      fetchAdminAppliedJobs()
+      fetchAdminAppliedJobs();
 
     } catch (error) {
       setError(error.response?.data?.message || "Failed to reject the job");
@@ -168,36 +103,35 @@ export default function AdminAppliedJobs() {
       <Heading>Users Applied Jobs</Heading>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       <Container>
-    {jobs.length > 0 ? (
-        jobs.slice(0).reverse().map((jobGroup) => // Reverse the jobs array here
+        {jobs.length > 0 ? (
+          jobs.slice(0).reverse().map((jobGroup) => 
             jobGroup.jobs.map((jobdata) => (
-                <JobCard key={jobdata._id}>
-                    <JobTitle>{jobdata.title}</JobTitle>
-                    <CompanyName>{jobdata.company}</CompanyName>
-                    <JobDetails>
-                        <DetailItem><strong>User Email: </strong>{jobGroup.useremail}</DetailItem>
-                        <DetailItem><strong>Location: </strong>{jobdata.location}</DetailItem>
-                        <DetailItem><strong>Experience: </strong>{jobdata.experience}</DetailItem>
-                        <DetailItem><strong>Salary: </strong>{jobdata.salary}</DetailItem>
-                        <DetailItem><strong>Status: </strong>{jobdata.status}</DetailItem>
-                        <small>Applied At: {new Date(jobdata.appliedAt).toLocaleDateString()}</small>
-                    </JobDetails>
+              <JobCard key={jobdata._id}>
+                <JobTitle>{jobdata.title}</JobTitle>
+                <CompanyName>{jobdata.company}</CompanyName>
+                <JobDetails>
+                  <DetailItem><strong>User Email: </strong>{jobGroup.useremail}</DetailItem>
+                  <DetailItem><strong>Location: </strong>{jobdata.location}</DetailItem>
+                  <DetailItem><strong>Experience: </strong>{jobdata.experience}</DetailItem>
+                  <DetailItem><strong>Salary: </strong>{jobdata.salary}</DetailItem>
+                  <DetailItem><strong>Status: </strong>{jobdata.status}</DetailItem>
+                  <small>Applied At: {new Date(jobdata.appliedAt).toLocaleDateString()}</small>
+                </JobDetails>
 
-                    {jobdata.status !== 'Accepted' && jobdata.status !== 'Rejected' && (
-                        <ButtonContainer>
-                            <AcceptButton onClick={() => handleAccept(jobGroup._id, jobGroup.userId, jobdata._id)}>Accept</AcceptButton>
-                            <RejectButton onClick={() => handleReject(jobGroup._id, jobGroup.userId, jobdata._id)}>Reject</RejectButton>
-                            <ViewCVButton onClick={() => handleViewCV(jobGroup.userId)}>View CV</ViewCVButton>
-                        </ButtonContainer>
-                    )}
-                </JobCard>
+                {jobdata.status !== 'Accepted' && jobdata.status !== 'Rejected' && (
+                  <ButtonContainer>
+                    <AcceptButton onClick={() => handleAccept(jobGroup._id, jobGroup.userId, jobdata._id)}>Accept</AcceptButton>
+                    <RejectButton onClick={() => handleReject(jobGroup._id, jobGroup.userId, jobdata._id)}>Reject</RejectButton>
+                  </ButtonContainer>
+                )}
+                <Link to={`/admin/adminUserProfile/${jobGroup.userId}`} className="btn btn-warning mt-2">View Profile</Link>
+              </JobCard>
             ))
-        )
-    ) : (
-        !error && <NoJobsMessage>No jobs available</NoJobsMessage>
-    )}
-</Container>
-
+          )
+        ) : (
+          !error && <NoJobsMessage>No jobs available</NoJobsMessage>
+        )}
+      </Container>
     </Background>
   );
 }
@@ -205,7 +139,7 @@ export default function AdminAppliedJobs() {
 // Styled components for styling job cards
 
 const Background = styled.div`
-  background-color: #000000;
+  background-color: #ffffff; /* White background */
   min-height: 100vh;
   padding: 20px;
 `;
@@ -213,7 +147,7 @@ const Background = styled.div`
 const Heading = styled.h1`
   text-align: center;
   margin: 20px 0;
-  color: #FFD700;
+  color: #1e3a8a; /* Blue color */
   font-size: 2.5rem;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;
@@ -232,34 +166,40 @@ const Container = styled.div`
 `;
 
 const JobCard = styled.div`
-  background-color: #1A1A1A;
-  border: 1px solid #FFD700;
+  background-color: #ffffff; /* White background for the card */
+  border: 1px solid #1e3a8a; /* Blue border */
   border-radius: 8px;
   padding: 20px;
   width: 45%;
   max-width: 500px;
-  color: #FFF;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  color: #333333; /* Dark text for contrast */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for card */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+   background: linear-gradient(125deg, #1e3a8a, #60a5fa); /* Blue gradient background */
+    box-shadow: 0 6px 12px rgba(96, 165, 250, 0.3); /* Lighter blue shadow */
+  transition: transform 0.3s ease-in-out;
+  color: white;
+  overflow: hidden; /* Hide overflow if you want to cut off excess content */
+  border: 1px solid #60a5fa;
 `;
 
 const JobTitle = styled.h3`
   font-size: 1.5rem;
-  color: #FFD700;
   margin-bottom: 5px;
+  color:black
 `;
 
 const CompanyName = styled.h4`
   font-size: 1.1rem;
-  color: #CCCCCC;
   margin-bottom: 15px;
+  color:black
+
 `;
 
 const JobDetails = styled.div`
   font-size: 0.9rem;
-  color: #E0E0E0;
   line-height: 1.6;
 `;
 
@@ -268,7 +208,6 @@ const DetailItem = styled.p`
   display: flex;
   align-items: center;
   font-size: 0.9rem;
-  color: #E0E0E0;
 `;
 
 const ButtonContainer = styled.div`
@@ -278,7 +217,7 @@ const ButtonContainer = styled.div`
 `;
 
 const AcceptButton = styled.button`
-  background-color: #28a745;
+  background-color: #1e3a8a; /* Blue color */
   color: white;
   border: none;
   padding: 10px;
@@ -287,7 +226,7 @@ const AcceptButton = styled.button`
   font-size: 1rem;
   flex: 1;
   &:hover {
-    background-color: #218838;
+    background-color: #153e75;
   }
 `;
 
@@ -305,22 +244,8 @@ const RejectButton = styled.button`
   }
 `;
 
-const ViewCVButton = styled.button`
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  flex: 1;
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
 const NoJobsMessage = styled.p`
-  color: #AAAAAA;
+  color: #aaaaaa;
   text-align: center;
   font-size: 1.2rem;
   margin-top: 20px;

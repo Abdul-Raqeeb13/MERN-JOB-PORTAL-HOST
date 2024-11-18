@@ -3,6 +3,7 @@ const { postJob, getAllJobs, deleteJobs,getJob } = require('../models/adminModel
 const { getall, updateAcceptJobStatus, updateRejectJobStatus } = require('../models/userModel')
 const {findUserById} = require('../models/authModel')
 // const PdfDetails = require('../models/pdfModel'); // Adjust the path based on your directory structure
+const {createProfile, findUserProfile} = require("../models/profileModel")
 
 
 exports.adminAddJobs = (async (req, res) => { 
@@ -196,3 +197,44 @@ exports.adminRejectJobs = async (req, res) => {
 //     }
 // };
 
+exports.adminGetUserProfile = async (req, res) => {
+    
+    try {
+        // Retrieve the userId from the query string or params
+        const userId = req.query.userId || req.params.userId;
+        // console.log(userId);
+        
+        // Validate userId is provided
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "User ID is required."
+            });
+        }
+
+        // Fetch the user's profile data using the userId
+        const userProfile = await findUserProfile( userId );
+        // console.log(userProfile);
+        
+        // If no profile is found, return an error
+        if (!userProfile) {
+            return res.status(404).json({
+                success: false,
+                message: "User profile not found."
+            });
+        }
+
+        // If profile is found, return the profile data
+        return res.status(200).json({
+            success: true,
+            data: userProfile
+        });
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching the user profile.",
+            error: error.message
+        });
+    }
+};
