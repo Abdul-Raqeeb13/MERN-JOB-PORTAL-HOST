@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Chart, registerables } from 'chart.js'; // Import registerables from chart.js
@@ -70,6 +70,15 @@ const data = {
 };
 
 const AdminDashboard = () => {
+
+  // const [user, totalUser] = useState()
+  // const [jobs, totaljobs] = useState()
+  // const [, totaljobs] = useState()
+
+  useEffect(()=>{
+
+  },[])
+
     const nav = useNavigate();
     const location = useLocation();
 

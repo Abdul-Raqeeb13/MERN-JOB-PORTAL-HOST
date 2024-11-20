@@ -1,43 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import { Alert } from 'react-bootstrap';
 
-const ProtectedRoute = ({ element, ...rest }) => {
+const ProtectedRoute = ({ element }) => {
   const { isAuthenticated } = useAuth();
+  const [showAlert, setShowAlert] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      toast.info("Please login first", {
-        position: "top-center",
-        autoClose: 900,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme:'dark'
-      }); // Show the alert
+      setShowAlert(true); // Show the alert if the user is not authenticated
 
-      // Set a timeout to redirect after 2 seconds
+      // Automatically hide alert after 3 seconds and redirect
       const timer = setTimeout(() => {
-        setRedirect(true); // Trigger redirect after 2 seconds
-      }, 900);
+        setShowAlert(false);
+        setRedirect(true); // Trigger the redirect after alert disappears
+      },800);
 
-      // Clear the timeout if the component unmounts or isAuthenticated changes
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer); // Cleanup timer on unmount
     }
   }, [isAuthenticated]);
 
   if (redirect) {
-    return <Navigate to="/" />; // Redirect to home after 2 seconds
+    return <Navigate to="/" />; // Redirect to home page
   }
 
   return (
     <>
-      <ToastContainer/>
+      {showAlert && (
+        <Alert
+          variant="warning"
+          dismissible
+          onClose={() => {
+            setShowAlert(false);
+            setRedirect(true); // Redirect after closing the alert
+          }}
+          style={{
+            position: 'fixed',
+            top: 0,
+            width: '100%',
+            zIndex: 1050, // Ensures it appears above other elements
+            textAlign: 'center',
+          }}
+        >
+          <strong>Login Required:</strong> Please log in to access this page.
+        </Alert>
+      )}
       {element}
     </>
   );
